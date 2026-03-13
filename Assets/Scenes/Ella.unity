@@ -507,8 +507,104 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: -2213616601027682266, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1464267605}
+    - targetCorrespondingSourceObject: {fileID: -2213616601027682266, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1464267604}
+    - targetCorrespondingSourceObject: {fileID: 8732227284165950461, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1464267603}
+    - targetCorrespondingSourceObject: {fileID: 8732227284165950461, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1464267602}
   m_SourcePrefab: {fileID: 100100000, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+--- !u!1 &1464267600 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8732227284165950461, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+  m_PrefabInstance: {fileID: 1464267599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1464267601 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -2213616601027682266, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
+  m_PrefabInstance: {fileID: 1464267599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1464267602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464267600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ardity::SerialController
+  portName: COM7
+  baudRate: 9600
+  messageListener: {fileID: 0}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
+  dropOldMessage: 0
+  logDroppedMessages: 1
+  readAllMessages: 0
+  dtrEnable: 0
+  rtsEnable: 0
+--- !u!114 &1464267603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464267600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 186b1810d4133cd4ba36ef4f9e3e26cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Flipper
+  threshold: 100
+  angle: 120
+  holdTime: 0.15
+--- !u!114 &1464267604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464267601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc5f48af2cffd747a079fe8c632e2c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Ardity::SerialController
+  portName: COM7
+  baudRate: 9600
+  messageListener: {fileID: 0}
+  reconnectionDelay: 1000
+  maxUnreadMessages: 1
+  dropOldMessage: 0
+  logDroppedMessages: 1
+  readAllMessages: 0
+  dtrEnable: 0
+  rtsEnable: 0
+--- !u!114 &1464267605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1464267601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 186b1810d4133cd4ba36ef4f9e3e26cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Flipper
+  threshold: 100
+  angle: -120
+  holdTime: 0.15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "ardity": {
+      "version": "https://github.com/dwilches/Ardity.git?path=UnityProject/Assets/Ardity",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "d0eba0251c9e65f31190e7ea846a3b7f96d6d8c2"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.11",
       "depth": 0,
