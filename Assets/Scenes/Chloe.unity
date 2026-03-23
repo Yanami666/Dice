@@ -8008,10 +8008,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4339401851390816060, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -4339401851390816060, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
@@ -8966,10 +8962,6 @@ PrefabInstance:
     - target: {fileID: 3629918955978230988, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3666668977804881359, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3666668977804881359, guid: 45497e9f52bf349699cc27495b2648ec, type: 3}
       propertyPath: m_StaticEditorFlags
