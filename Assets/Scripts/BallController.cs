@@ -1,6 +1,6 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vector3 = UnityEngine.Vector3;
 
 public class BallController : MonoBehaviour
 {
@@ -11,10 +11,12 @@ public class BallController : MonoBehaviour
     private Rigidbody rb;
     private Vector3 startPosition;
     private bool launched = false;
+    private BallTrail ballTrail;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        ballTrail = GetComponent<BallTrail>();
         startPosition = transform.position;
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -63,6 +65,7 @@ public class BallController : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
         transform.position = startPosition;
+        if (ballTrail != null) ballTrail.ClearTrail();
     }
 
     void OnTriggerEnter(Collider other)
