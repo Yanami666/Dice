@@ -8,43 +8,81 @@ public class FlipperController : MonoBehaviour
     [Header("左右设置")]
     public bool isLeftFlipper = true;
 
-    [Header("角度（相对初始位置）")]
-    public float restAngle = 0f;      // 静止下垂角度
-    public float activeAngle = 35f;   // 按Space时翻起角度
+    [Header("如果方向反了就勾这个")]
+    public bool reverseAxis = false;
+
+    [Header("把 pinnlend 拖进来")]
+    public Transform tableRoot;
+
+    [Header("角度")]
+    public float restAngle = 0f;
+    public float activeAngle = 30f;
 
     [Header("速度（度/秒）")]
-    public float flipUpSpeed = 1200f;   // 翻起速度要快，这样打球才有力
-    public float flipDownSpeed = 400f;
+    public float flipUpSpeed = 400f;
+    public float flipDownSpeed = 200f;
 
     private Rigidbody rb;
-    private float currentAngle;
-    private Quaternion initialLocalRotation;
+    private Quaternion initialWorldRot;
+    private Vector3 hingeAxis;
+    private float currentAngle = 0f;
+
+    private bool isFlipping = false;
+    private bool hasReachedTop = false;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;    // Kinematic = 不受重力，但能传递速度给球
+        rb.isKinematic = true;
         rb.useGravity = false;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 
-        currentAngle = restAngle;
-        initialLocalRotation = transform.localRotation;
+        initialWorldRot = transform.rotation;
+
+        Vector3 axis = tableRoot != null ? tableRoot.up : Vector3.up;
+        hingeAxis = reverseAxis ? -axis : axis;
+    }
+
+    void Update()
+    {
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            isFlipping = true;
+            hasReachedTop = false;
+        }
     }
 
     void FixedUpdate()
     {
-        bool pressing = Keyboard.current.spaceKey.isPressed;
-        float targetAngle = pressing ? activeAngle : restAngle;
-        float speed = pressing ? flipUpSpeed : flipDownSpeed;
+        float target;
+        float speed;
 
-        // MoveTowards比Lerp更线性，打球力道更稳定
-        currentAngle = Mathf.MoveTowards(currentAngle, targetAngle, speed * Time.fixedDeltaTime);
+        if (isFlipping && !hasReachedTop)
+        {
+            // 往上翻，必须到顶
+            target = activeAngle;
+            speed = flipUpSpeed;
 
-        // 左右镜像：左flipper正转，右flipper反转
-        float angle = isLeftFlipper ? currentAngle : -currentAngle;
+            currentAngle = Mathf.MoveTowards(currentAngle, target, speed * Time.fixedDeltaTime);
 
-        // 必须用MoveRotation！这样物理引擎才知道flipper的速度，碰球时才会给力
-        Quaternion localTarget = initialLocalRotation * Quaternion.Euler(0f, angle, 0f);
-        Quaternion worldTarget = (transform.parent != null ? transform.parent.rotation : Quaternion.identity) * localTarget;
-        rb.MoveRotation(worldTarget);
+            // 到达顶部了
+            if (Mathf.Approximately(currentAngle, activeAngle))
+                hasReachedTop = true;
+        }
+        else
+        {
+            // 到顶了或者没在翻：往下回
+            target = restAngle;
+            speed = flipDownSpeed;
+            currentAngle = Mathf.MoveTowards(currentAngle, target, speed * Time.fixedDeltaTime);
+
+            if (Mathf.Approximately(currentAngle, restAngle))
+                isFlipping = false;
+        }
+
+        float sign = isLeftFlipper ? 1f : -1f;
+        Quaternion delta = Quaternion.AngleAxis(sign * currentAngle, hingeAxis);
+        rb.MoveRotation(delta * initialWorldRot);
     }
 }

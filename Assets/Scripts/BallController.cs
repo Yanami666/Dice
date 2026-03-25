@@ -1,22 +1,34 @@
+
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Vector3 = UnityEngine.Vector3;
 
 public class BallController : MonoBehaviour
 {
-    public Vector3 launchForce = new Vector3(0f, 2f, -30f);
+    [Header("发射设置")]
+    public Vector3 launchForce = new Vector3(0f, 0.1f, -6f);
+
+    [Header("速度限制")]
+    public float maxSpeed = 50f;
+
+    [Header("重置Y轴阈值")]
     public float deathY = -5f;
-    public float maxSpeed = 25f;
+
+    [Header("台面法线方向")]
+    public Vector3 tableNormal = new Vector3(0f, 0.96f, 0.28f);
+
+    [Header("ScoreManager")]
+    public ScoreManager scoreManager;
+
+    [Header("EnergyManager")]
+    public EnergyManager energyManager;
 
     private Rigidbody rb;
     private Vector3 startPosition;
     private bool launched = false;
-    private BallTrail ballTrail;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        ballTrail = GetComponent<BallTrail>();
         startPosition = transform.position;
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
@@ -24,9 +36,9 @@ public class BallController : MonoBehaviour
         PhysicsMaterial mat = new PhysicsMaterial();
         mat.dynamicFriction = 0f;
         mat.staticFriction = 0f;
-        mat.bounciness = 0.3f;
+        mat.bounciness = 0f;
         mat.frictionCombine = PhysicsMaterialCombine.Minimum;
-        mat.bounceCombine = PhysicsMaterialCombine.Average;
+        mat.bounceCombine = PhysicsMaterialCombine.Minimum;
         GetComponent<SphereCollider>().material = mat;
     }
 
@@ -45,6 +57,12 @@ public class BallController : MonoBehaviour
 
         rb.angularVelocity = Vector3.zero;
 
+        Vector3 normal = tableNormal.normalized;
+        Vector3 velocity = rb.linearVelocity;
+        float normalComponent = Vector3.Dot(velocity, normal);
+        if (normalComponent > 0)
+            rb.linearVelocity = velocity - normalComponent * normal;
+
         if (rb.linearVelocity.magnitude > maxSpeed)
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
     }
@@ -55,6 +73,7 @@ public class BallController : MonoBehaviour
         rb.isKinematic = false;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
         rb.AddForce(launchForce, ForceMode.Impulse);
+        scoreManager?.StartScoring();
     }
 
     void ResetBall()
@@ -65,7 +84,9 @@ public class BallController : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
         transform.position = startPosition;
-        if (ballTrail != null) ballTrail.ClearTrail();
+        scoreManager?.StopScoring();
+        scoreManager?.ResetScore();
+        energyManager?.ResetEnergy();
     }
 
     void OnTriggerEnter(Collider other)

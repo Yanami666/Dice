@@ -8,28 +8,40 @@ public class AddCollidersEditor
     static void ApplyMaterial()
     {
         GameObject selected = Selection.activeGameObject;
-        if (selected == null) { Debug.LogError("请先选中GilligansIsland"); return; }
+        if (selected == null) { Debug.LogError("请先选中pinnlend"); return; }
 
-        // 直接在代码里创建零摩擦材质
+        // 检查有多少MeshFilter
+        MeshFilter[] meshFilters = selected.GetComponentsInChildren<MeshFilter>(true);
+        Debug.Log($"找到 {meshFilters.Length} 个MeshFilter");
+
+        // 检查有多少Collider
+        Collider[] existingCols = selected.GetComponentsInChildren<Collider>(true);
+        Debug.Log($"已有 {existingCols.Length} 个Collider");
+
         PhysicsMaterial mat = new PhysicsMaterial("Surface");
         mat.dynamicFriction = 0f;
         mat.staticFriction = 0f;
         mat.bounciness = 0.3f;
         mat.frictionCombine = PhysicsMaterialCombine.Minimum;
         mat.bounceCombine = PhysicsMaterialCombine.Average;
-
-        // 保存材质到Assets
         AssetDatabase.CreateAsset(mat, "Assets/Material/SurfaceAuto.physicsMaterial");
 
-        // 给所有子物体碰撞体加上
-        Collider[] cols = selected.GetComponentsInChildren<Collider>(true);
-        foreach (Collider col in cols)
+        int added = 0;
+        foreach (MeshFilter mf in meshFilters)
         {
-            col.sharedMaterial = mat;
-            EditorUtility.SetDirty(col.gameObject);
+            if (mf.sharedMesh == null) continue;
+            MeshCollider mc = mf.GetComponent<MeshCollider>();
+            if (mc == null)
+            {
+                mc = Undo.AddComponent<MeshCollider>(mf.gameObject);
+                mc.sharedMesh = mf.sharedMesh;
+                added++;
+            }
+            mc.sharedMaterial = mat;
+            EditorUtility.SetDirty(mf.gameObject);
         }
 
         AssetDatabase.SaveAssets();
-        Debug.Log($"完成！给 {cols.Length} 个碰撞体加了零摩擦材质");
+        Debug.Log($"新增了 {added} 个MeshCollider");
     }
 }
