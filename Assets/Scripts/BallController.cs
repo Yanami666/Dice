@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,7 +7,10 @@ public class BallController : MonoBehaviour
     public Vector3 launchForce = new Vector3(0f, 0.1f, -6f);
 
     [Header("速度限制")]
-    public float maxSpeed = 50f;
+    public float maxSpeed = 80f;
+
+    [Header("被Flipper打到时的速度倍增")]
+    public float flipperSpeedMultiplier = 1.8f;
 
     [Header("重置Y轴阈值")]
     public float deathY = -5f;
@@ -26,10 +28,9 @@ public class BallController : MonoBehaviour
     private Vector3 startPosition;
     private bool launched = false;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        startPosition = transform.position;
         rb.isKinematic = true;
         rb.constraints = RigidbodyConstraints.FreezeRotation;
 
@@ -40,6 +41,11 @@ public class BallController : MonoBehaviour
         mat.frictionCombine = PhysicsMaterialCombine.Minimum;
         mat.bounceCombine = PhysicsMaterialCombine.Minimum;
         GetComponent<SphereCollider>().material = mat;
+    }
+
+    void Start()
+    {
+        startPosition = transform.position;
     }
 
     void Update()
@@ -67,7 +73,24 @@ public class BallController : MonoBehaviour
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
     }
 
-    void LaunchBall()
+    void OnCollisionEnter(Collision collision)
+    {
+        if (!launched) return;
+
+        // 被flipper打到时加速
+        if (collision.gameObject.CompareTag("Flipper"))
+        {
+            Vector3 vel = rb.linearVelocity;
+            float speed = vel.magnitude;
+
+            // 确保有最小速度再乘倍数
+            float newSpeed = Mathf.Max(speed, 5f) * flipperSpeedMultiplier;
+            newSpeed = Mathf.Min(newSpeed, maxSpeed);
+            rb.linearVelocity = vel.normalized * newSpeed;
+        }
+    }
+
+    public void LaunchBall()
     {
         launched = true;
         rb.isKinematic = false;
@@ -76,8 +99,23 @@ public class BallController : MonoBehaviour
         scoreManager?.StartScoring();
     }
 
-    void ResetBall()
+    public void LaunchImmediately()
     {
+        launched = true;
+        rb.isKinematic = false;
+        rb.constraints = RigidbodyConstraints.FreezeRotation;
+        rb.AddForce(launchForce, ForceMode.Impulse);
+        scoreManager?.StartScoring();
+    }
+
+    public void ResetBall()
+    {
+        if (gameObject.name.Contains("(Clone)"))
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         launched = false;
         rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;

@@ -1,14 +1,14 @@
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Quaternion = UnityEngine.Quaternion;
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class FlipperController : MonoBehaviour
 {
     [Header("左右设置")]
     public bool isLeftFlipper = true;
-
-    [Header("如果方向反了就勾这个")]
     public bool reverseAxis = false;
 
     [Header("把 pinnlend 拖进来")]
@@ -16,7 +16,7 @@ public class FlipperController : MonoBehaviour
 
     [Header("角度")]
     public float restAngle = 0f;
-    public float activeAngle = 30f;
+    public float activeAngle = -60f;
 
     [Header("速度（度/秒）")]
     public float flipUpSpeed = 400f;
@@ -26,7 +26,6 @@ public class FlipperController : MonoBehaviour
     private Quaternion initialWorldRot;
     private Vector3 hingeAxis;
     private float currentAngle = 0f;
-
     private bool isFlipping = false;
     private bool hasReachedTop = false;
 
@@ -37,9 +36,7 @@ public class FlipperController : MonoBehaviour
         rb.useGravity = false;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
-
         initialWorldRot = transform.rotation;
-
         Vector3 axis = tableRoot != null ? tableRoot.up : Vector3.up;
         hingeAxis = reverseAxis ? -axis : axis;
     }
@@ -60,23 +57,17 @@ public class FlipperController : MonoBehaviour
 
         if (isFlipping && !hasReachedTop)
         {
-            // 往上翻，必须到顶
             target = activeAngle;
             speed = flipUpSpeed;
-
             currentAngle = Mathf.MoveTowards(currentAngle, target, speed * Time.fixedDeltaTime);
-
-            // 到达顶部了
             if (Mathf.Approximately(currentAngle, activeAngle))
                 hasReachedTop = true;
         }
         else
         {
-            // 到顶了或者没在翻：往下回
             target = restAngle;
             speed = flipDownSpeed;
             currentAngle = Mathf.MoveTowards(currentAngle, target, speed * Time.fixedDeltaTime);
-
             if (Mathf.Approximately(currentAngle, restAngle))
                 isFlipping = false;
         }

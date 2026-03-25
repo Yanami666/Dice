@@ -10,6 +10,11 @@ public class EnergyManager : MonoBehaviour
     public int hitsRequired = 5;
     public GameObject[] triggerObjects;
 
+    [Header("效果1：复制球")]
+    public GameObject ballPrefab;
+    public float duplicateDuration = 20f;
+    public Vector3 duplicateLaunchForce = new Vector3(0f, 0.1f, -6f); // 单独调整复制球发射力
+
     [Header("UI")]
     public Slider energySlider;
     public TextMeshProUGUI energyText;
@@ -17,6 +22,7 @@ public class EnergyManager : MonoBehaviour
 
     private int currentHits = 0;
     private bool isReady = false;
+    private GameObject duplicateBall;
 
     void Start()
     {
@@ -65,10 +71,7 @@ public class EnergyManager : MonoBehaviour
     {
         if (!isReady) return;
 
-        Debug.Log($"触发效果 {index + 1}");
-
-        // 效果逻辑以后在这里加
-        // if (index == 0) { 效果1 }
+        if (index == 0) SpawnDuplicateBall();
         // if (index == 1) { 效果2 }
         // if (index == 2) { 效果3 }
 
@@ -77,10 +80,34 @@ public class EnergyManager : MonoBehaviour
         UpdateUI();
     }
 
+    void SpawnDuplicateBall()
+    {
+        if (ballPrefab == null) return;
+
+        if (duplicateBall != null)
+            Destroy(duplicateBall);
+
+        Vector3 spawnPos = ballPrefab.transform.position + new Vector3(1f, 0f, 0f);
+        duplicateBall = Instantiate(ballPrefab, spawnPos, ballPrefab.transform.rotation);
+
+        BallController bc = duplicateBall.GetComponent<BallController>();
+        if (bc != null)
+        {
+            bc.scoreManager = ballPrefab.GetComponent<BallController>().scoreManager;
+            bc.energyManager = this;
+
+            // 用单独设置的发射力
+            bc.launchForce = duplicateLaunchForce;
+            bc.LaunchImmediately();
+        }
+
+        Destroy(duplicateBall, duplicateDuration);
+        Debug.Log($"复制球生成，{duplicateDuration}秒后消失");
+    }
+
     void OnEnergyFull()
     {
-        Debug.Log("能量满了！按1/2/3触发效果");
-
+        Debug.Log("能量满了！按1触发复制球");
         if (abilityIcons != null)
             foreach (var icon in abilityIcons)
                 if (icon != null) icon.SetActive(true);
@@ -90,7 +117,19 @@ public class EnergyManager : MonoBehaviour
     {
         currentHits = 0;
         isReady = false;
-        UpdateUI();
+
+        if (energySlider != null)
+        {
+            energySlider.maxValue = hitsRequired;
+            energySlider.value = 0;
+        }
+
+        if (energyText != null)
+            energyText.text = $"0/{hitsRequired}";
+
+        if (abilityIcons != null)
+            foreach (var icon in abilityIcons)
+                if (icon != null) icon.SetActive(false);
     }
 
     void UpdateUI()
