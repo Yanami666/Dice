@@ -1,7 +1,8 @@
-using System;
-using System.Numerics;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Vector3 = UnityEngine.Vector3;
+using Quaternion = UnityEngine.Quaternion;
+using System;
 
 public class BallController : MonoBehaviour
 {
@@ -79,13 +80,10 @@ public class BallController : MonoBehaviour
     {
         if (!launched) return;
 
-        // 被flipper打到时加速
         if (collision.gameObject.CompareTag("Flipper"))
         {
             Vector3 vel = rb.linearVelocity;
             float speed = vel.magnitude;
-
-            // 确保有最小速度再乘倍数
             float newSpeed = Mathf.Max(speed, 5f) * flipperSpeedMultiplier;
             newSpeed = Mathf.Min(newSpeed, maxSpeed);
             rb.linearVelocity = vel.normalized * newSpeed;
