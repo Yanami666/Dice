@@ -28,6 +28,11 @@ public class BallController : MonoBehaviour
     public GameObject deathObject;
     public float lockDuration = 5f;
 
+    [Header("卡住检测")]
+    public float stuckTimeLimit = 2f;        // 卡住多少秒触发弹力
+    public float stuckSpeedThreshold = 0.5f; // 速度低于此值算卡住
+    public float stuckEscapeForce = 15f;     // 脱困弹力大小
+
     [Header("龙卷风设置")]
     public float tornadoDuration = 10f;
     public float tornadoFloatHeight = 2f;
@@ -60,7 +65,10 @@ public class BallController : MonoBehaviour
     private Vector3 tornadoCenter;
     private Vector3 tornadoFlyTarget;
 
-    private bool isGiant = false;
+    public bool isGiant = false;
+
+    private float stuckTimer = 0f;
+    private Vector3 lastPosition;
 
     void Awake()
     {
@@ -87,6 +95,7 @@ public class BallController : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
+        lastPosition = transform.position;
     }
 
     void Update()
@@ -115,6 +124,36 @@ public class BallController : MonoBehaviour
 
         if (rb.linearVelocity.magnitude > maxSpeed)
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+
+        // 卡住检测
+        if (rb.linearVelocity.magnitude < stuckSpeedThreshold)
+        {
+            stuckTimer += Time.fixedDeltaTime;
+
+            if (stuckTimer >= stuckTimeLimit)
+            {
+                stuckTimer = 0f;
+                EscapeFromStuck();
+            }
+        }
+        else
+        {
+            stuckTimer = 0f;
+        }
+    }
+
+    void EscapeFromStuck()
+    {
+        // 往台面上方方向弹出
+        Vector3 escapeDir = new Vector3(
+            Random.Range(-0.5f, 0.5f),
+            0.3f,
+            -1f
+        ).normalized;
+
+        rb.linearVelocity = Vector3.zero;
+        rb.AddForce(escapeDir * stuckEscapeForce, ForceMode.Impulse);
+        Debug.Log("球卡住了，自动脱困！");
     }
 
     public void StartGiant()
@@ -244,6 +283,7 @@ public class BallController : MonoBehaviour
 
         launched = false;
         isLocked = true;
+        stuckTimer = 0f;
 
         rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;

@@ -20,6 +20,7 @@ public class BallLauncher : MonoBehaviour
     public float arrivalSpeed = 5f;
 
     private Rigidbody rb;
+    private BallController ballController;
     private bool isAnimating = false;
     private float timer = 0f;
     private Vector3 arcStart;
@@ -28,6 +29,7 @@ public class BallLauncher : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        ballController = GetComponent<BallController>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -35,6 +37,9 @@ public class BallLauncher : MonoBehaviour
         if (isAnimating) return;
         if (triggerObject == null || endPoint == null) return;
         if (collision.gameObject != triggerObject) return;
+
+        // 巨球期间禁用TP
+        if (ballController != null && ballController.isGiant) return;
 
         StartArcAnimation();
     }
@@ -48,7 +53,6 @@ public class BallLauncher : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        // 从当前位置飞向终点
         arcStart = transform.position;
         arcEnd = endPoint.position;
     }
