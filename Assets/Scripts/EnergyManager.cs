@@ -15,9 +15,21 @@ public class EnergyManager : MonoBehaviour
     public Material feverMaterial;
     public Renderer[] feverTargets;
 
+    [Header("Fever期间生成的弹性物体")]
+    public GameObject bouncyObjectPrefab;       // 拖入弹性物体Prefab
+    public Transform[] bouncySpawnPoints;       // 生成位置
+
     [Header("效果1：复制球")]
     public GameObject ballPrefab;
     public Vector3 duplicateLaunchForce = new Vector3(0f, 0.1f, -6f);
+
+    [Header("效果2：Bonus物体")]
+    public GameObject bonusObjectPrefab;
+    public Transform[] bonusSpawnPoints;
+    public ScoreManager bonusScoreManager;
+
+    [Header("效果3：龙卷风")]
+    public BallController ballController;
 
     [Header("UI")]
     public Slider energySlider;
@@ -30,6 +42,8 @@ public class EnergyManager : MonoBehaviour
     private float feverTimer = 0f;
     private GameObject duplicateBall;
     private Material[] originalMaterials;
+    private GameObject[] spawnedBonusObjects;
+    private GameObject[] spawnedBouncyObjects;
 
     void Start()
     {
@@ -48,14 +62,15 @@ public class EnergyManager : MonoBehaviour
 
     void Update()
     {
-        if (!isReady) return;
-
-        if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            TriggerAbility(0);
-        else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            TriggerAbility(1);
-        else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-            TriggerAbility(2);
+        if (isReady)
+        {
+            if (Keyboard.current.digit1Key.wasPressedThisFrame)
+                TriggerAbility(0);
+            else if (Keyboard.current.digit2Key.wasPressedThisFrame)
+                TriggerAbility(1);
+            else if (Keyboard.current.digit3Key.wasPressedThisFrame)
+                TriggerAbility(2);
+        }
 
         if (isFever)
         {
@@ -94,7 +109,6 @@ public class EnergyManager : MonoBehaviour
     void OnEnergyFull()
     {
         ApplyFeverMaterial();
-        Debug.Log("能量满了！材质已变化，按1触发效果");
 
         if (abilityIcons != null)
             foreach (var icon in abilityIcons)
@@ -105,47 +119,67 @@ public class EnergyManager : MonoBehaviour
     {
         if (!isReady) return;
 
+        if (isFever)
+            EndFever();
+
+        isFever = true;
+        feverTimer = feverDuration;
+
+        // 每次触发都生成弹性物体
+        SpawnBouncyObjects();
+
         if (index == 0)
         {
-            isFever = true;
-            feverTimer = feverDuration;
             SpawnDuplicateBall();
         }
-        // if (index == 1) { 效果2 }
-        // if (index == 2) { 效果3 }
+        else if (index == 1)
+        {
+            SpawnBonusObjects();
+        }
+        else if (index == 2)
+        {
+            if (ballController != null)
+                ballController.StartTornado();
+        }
 
         currentHits = 0;
         isReady = false;
         UpdateUI();
     }
 
-    void ApplyFeverMaterial()
+    void SpawnBouncyObjects()
     {
-        if (feverMaterial == null || feverTargets == null) return;
+        if (bouncyObjectPrefab == null || bouncySpawnPoints == null) return;
 
-        foreach (var r in feverTargets)
+        ClearBouncyObjects();
+
+        spawnedBouncyObjects = new GameObject[bouncySpawnPoints.Length];
+
+        for (int i = 0; i < bouncySpawnPoints.Length; i++)
         {
-            if (r != null)
-                r.material = feverMaterial;
+            if (bouncySpawnPoints[i] == null) continue;
+
+            GameObject obj = Instantiate(
+                bouncyObjectPrefab,
+                bouncySpawnPoints[i].position,
+                bouncySpawnPoints[i].rotation
+            );
+
+            spawnedBouncyObjects[i] = obj;
         }
     }
 
-    void EndFever()
+    void ClearBouncyObjects()
     {
-        isFever = false;
-        RestoreMaterials();
-        Debug.Log("Fever Time 结束，材质恢复");
-    }
+        if (spawnedBouncyObjects == null) return;
 
-    void RestoreMaterials()
-    {
-        if (feverTargets == null || originalMaterials == null) return;
-
-        for (int i = 0; i < feverTargets.Length; i++)
+        foreach (var obj in spawnedBouncyObjects)
         {
-            if (feverTargets[i] != null && originalMaterials[i] != null)
-                feverTargets[i].material = originalMaterials[i];
+            if (obj != null)
+                Destroy(obj);
         }
+
+        spawnedBouncyObjects = null;
     }
 
     void SpawnDuplicateBall()
@@ -162,13 +196,89 @@ public class EnergyManager : MonoBehaviour
         if (bc != null)
         {
             bc.scoreManager = ballPrefab.GetComponent<BallController>().scoreManager;
-            bc.energyManager = this;
+            bc.energyManager = null;
             bc.launchForce = duplicateLaunchForce;
             bc.LaunchImmediately();
         }
 
         Destroy(duplicateBall, feverDuration);
-        Debug.Log($"复制球生成，{feverDuration}秒后消失");
+    }
+
+    void SpawnBonusObjects()
+    {
+        if (bonusObjectPrefab == null || bonusSpawnPoints == null) return;
+
+        ClearBonusObjects();
+
+        spawnedBonusObjects = new GameObject[bonusSpawnPoints.Length];
+
+        for (int i = 0; i < bonusSpawnPoints.Length; i++)
+        {
+            if (bonusSpawnPoints[i] == null) continue;
+
+            GameObject obj = Instantiate(
+                bonusObjectPrefab,
+                bonusSpawnPoints[i].position,
+                bonusSpawnPoints[i].rotation
+            );
+
+            BonusObject bo = obj.GetComponent<BonusObject>();
+            if (bo != null)
+                bo.scoreManager = bonusScoreManager;
+
+            spawnedBonusObjects[i] = obj;
+            Destroy(obj, feverDuration);
+        }
+    }
+
+    void ClearBonusObjects()
+    {
+        if (spawnedBonusObjects == null) return;
+
+        foreach (var obj in spawnedBonusObjects)
+        {
+            if (obj != null)
+                Destroy(obj);
+        }
+
+        spawnedBonusObjects = null;
+    }
+
+    void ApplyFeverMaterial()
+    {
+        if (feverMaterial == null || feverTargets == null) return;
+
+        foreach (var r in feverTargets)
+        {
+            if (r != null)
+                r.material = feverMaterial;
+        }
+    }
+
+    void EndFever()
+    {
+        isFever = false;
+        feverTimer = 0f;
+        RestoreMaterials();
+        ClearBonusObjects();
+        ClearBouncyObjects();
+
+        if (duplicateBall != null)
+        {
+            Destroy(duplicateBall);
+            duplicateBall = null;
+        }
+    }
+
+    void RestoreMaterials()
+    {
+        if (feverTargets == null || originalMaterials == null) return;
+
+        for (int i = 0; i < feverTargets.Length; i++)
+        {
+            if (feverTargets[i] != null && originalMaterials[i] != null)
+                feverTargets[i].material = originalMaterials[i];
+        }
     }
 
     public void ResetEnergy()
@@ -178,10 +288,10 @@ public class EnergyManager : MonoBehaviour
         isFever = false;
         feverTimer = 0f;
 
-        // 球死了无论什么状态都恢复材质
         RestoreMaterials();
+        ClearBonusObjects();
+        ClearBouncyObjects();
 
-        // 销毁复制球
         if (duplicateBall != null)
         {
             Destroy(duplicateBall);

@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class ScoreObject : MonoBehaviour
@@ -22,11 +23,24 @@ public class ScoreObject : MonoBehaviour
     {
         audioSource = gameObject.AddComponent<AudioSource>();
         audioSource.playOnAwake = false;
+        Debug.Log($"ScoreObject 初始化：{gameObject.name}");
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"OnTriggerEnter：{other.gameObject.name} Tag：{other.tag}");
+        HandleHit(other.gameObject);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (!collision.gameObject.CompareTag("Ball")) return;
+        Debug.Log($"OnCollisionEnter：{collision.gameObject.name} Tag：{collision.gameObject.tag}");
+        HandleHit(collision.gameObject);
+    }
+
+    void HandleHit(GameObject other)
+    {
+        if (!other.CompareTag("Ball")) return;
         if (Time.time - lastHitTime < cooldown) return;
 
         lastHitTime = Time.time;
@@ -34,9 +48,10 @@ public class ScoreObject : MonoBehaviour
         if (scoreManager != null)
             scoreManager.AddScore(points);
 
-        // 传入自身，让EnergyManager判断是否是有效触发物体
         if (energyManager != null)
             energyManager.RegisterHit(gameObject);
+        else
+            Debug.LogWarning($"EnergyManager 是空的！{gameObject.name}");
 
         if (hitSound != null)
         {
