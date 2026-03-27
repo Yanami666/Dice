@@ -19,6 +19,8 @@ public class ScoreManager : MonoBehaviour
     private float blinkTimer = 0f;
     private bool blinkVisible = true;
 
+    public float scoreMultiplier = 1f; // 分数倍数
+
     void Start()
     {
         UpdateUI();
@@ -28,7 +30,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (gameActive)
         {
-            score += pointsPerSecond * Time.deltaTime;
+            score += pointsPerSecond * scoreMultiplier * Time.deltaTime;
             UpdateUI();
         }
 
@@ -62,18 +64,18 @@ public class ScoreManager : MonoBehaviour
     }
 
     public void StartScoring() => gameActive = true;
-
     public void StopScoring() => gameActive = false;
 
     public void AddScore(float points)
     {
-        score += points;
+        score += points * scoreMultiplier;
         UpdateUI();
     }
 
     public void ResetScore()
     {
         score = 0f;
+        scoreMultiplier = 1f;
         UpdateUI();
     }
 

@@ -177,5 +177,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da8f3ed0ec70f4c89bb53a23249209ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BonusObject
-  bonusPoints: 500
+  bonusPoints: 10000
   scoreManager: {fileID: 0}

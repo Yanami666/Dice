@@ -37,6 +37,11 @@ public class BallController : MonoBehaviour
     public float tornadoPointsPerSecond = 20f;
     public Transform tornadoTarget;
 
+    [Header("巨球设置")]
+    public float giantDuration = 10f;
+    public float giantScale = 3f;
+    public float giantScoreMultiplier = 2f;
+
     [Header("ScoreManager")]
     public ScoreManager scoreManager;
 
@@ -45,6 +50,7 @@ public class BallController : MonoBehaviour
 
     private Rigidbody rb;
     private Vector3 startPosition;
+    private Vector3 normalScale;
     private bool launched = false;
     public static bool isLocked = false;
 
@@ -53,6 +59,8 @@ public class BallController : MonoBehaviour
     private float tornadoTimer = 0f;
     private Vector3 tornadoCenter;
     private Vector3 tornadoFlyTarget;
+
+    private bool isGiant = false;
 
     void Awake()
     {
@@ -72,6 +80,8 @@ public class BallController : MonoBehaviour
 
         if (deathObject != null)
             deathObject.SetActive(false);
+
+        normalScale = transform.localScale;
     }
 
     void Start()
@@ -105,6 +115,29 @@ public class BallController : MonoBehaviour
 
         if (rb.linearVelocity.magnitude > maxSpeed)
             rb.linearVelocity = rb.linearVelocity.normalized * maxSpeed;
+    }
+
+    public void StartGiant()
+    {
+        if (!launched) return;
+        if (isGiant) return;
+
+        isGiant = true;
+        transform.localScale = normalScale * giantScale;
+
+        if (scoreManager != null)
+            scoreManager.scoreMultiplier = giantScoreMultiplier;
+
+        Invoke(nameof(EndGiant), giantDuration);
+    }
+
+    void EndGiant()
+    {
+        isGiant = false;
+        transform.localScale = normalScale;
+
+        if (scoreManager != null)
+            scoreManager.scoreMultiplier = 1f;
     }
 
     public void StartTornado()
@@ -172,7 +205,6 @@ public class BallController : MonoBehaviour
         if (!launched) return;
         if (isTornado) return;
 
-        // 弹性物体自己处理，不干预
         if (collision.gameObject.GetComponent<BouncyObject>() != null) return;
 
         if (collision.gameObject.CompareTag("Flipper"))
@@ -202,6 +234,12 @@ public class BallController : MonoBehaviour
         {
             isTornado = false;
             tornadoFlying = false;
+        }
+
+        if (isGiant)
+        {
+            CancelInvoke(nameof(EndGiant));
+            EndGiant();
         }
 
         launched = false;

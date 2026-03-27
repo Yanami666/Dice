@@ -16,8 +16,8 @@ public class EnergyManager : MonoBehaviour
     public Renderer[] feverTargets;
 
     [Header("Fever期间生成的弹性物体")]
-    public GameObject bouncyObjectPrefab;       // 拖入弹性物体Prefab
-    public Transform[] bouncySpawnPoints;       // 生成位置
+    public GameObject bouncyObjectPrefab;
+    public Transform[] bouncySpawnPoints;
 
     [Header("效果1：复制球")]
     public GameObject ballPrefab;
@@ -30,6 +30,8 @@ public class EnergyManager : MonoBehaviour
 
     [Header("效果3：龙卷风")]
     public BallController ballController;
+
+    [Header("效果4：巨球（同一个BallController）")]
 
     [Header("UI")]
     public Slider energySlider;
@@ -70,6 +72,8 @@ public class EnergyManager : MonoBehaviour
                 TriggerAbility(1);
             else if (Keyboard.current.digit3Key.wasPressedThisFrame)
                 TriggerAbility(2);
+            else if (Keyboard.current.digit4Key.wasPressedThisFrame)
+                TriggerAbility(3);
         }
 
         if (isFever)
@@ -125,7 +129,6 @@ public class EnergyManager : MonoBehaviour
         isFever = true;
         feverTimer = feverDuration;
 
-        // 每次触发都生成弹性物体
         SpawnBouncyObjects();
 
         if (index == 0)
@@ -140,6 +143,11 @@ public class EnergyManager : MonoBehaviour
         {
             if (ballController != null)
                 ballController.StartTornado();
+        }
+        else if (index == 3)
+        {
+            if (ballController != null)
+                ballController.StartGiant();
         }
 
         currentHits = 0;

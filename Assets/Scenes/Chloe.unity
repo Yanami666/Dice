@@ -3483,7 +3483,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreObject
   scoreManager: {fileID: 753364224}
   energyManager: {fileID: 955633031}
-  points: 100
+  points: 1000
   hitSound: {fileID: 0}
   cooldown: 0.5
 --- !u!1 &396013305 stripped
@@ -5164,11 +5164,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -5213,7 +5213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 131, y: 454}
+  m_AnchoredPosition: {x: 4544, y: 454}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &632208441 stripped
@@ -8764,8 +8764,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreManager
   scoreText: {fileID: 163715151}
-  pointsPerSecond: 10
+  pointsPerSecond: 1000
   blinkInterval: 0.2
+  scoreMultiplier: 1
 --- !u!4 &753364225
 Transform:
   m_ObjectHideFlags: 0
@@ -9069,7 +9070,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 3677189845075643647, guid: 42d2dd40ff91d41d19fa756f34e4a2c6, type: 3}
 --- !u!1 &809071651 stripped
@@ -9799,7 +9800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreObject
   scoreManager: {fileID: 753364224}
   energyManager: {fileID: 955633031}
-  points: 100
+  points: 1000
   hitSound: {fileID: 0}
   cooldown: 0.5
 --- !u!64 &894202218
@@ -10107,7 +10108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreObject
   scoreManager: {fileID: 753364224}
   energyManager: {fileID: 955633031}
-  points: 100
+  points: 1000
   hitSound: {fileID: 0}
   cooldown: 0.5
 --- !u!1 &911005071 stripped
@@ -10514,7 +10515,7 @@ MonoBehaviour:
   - {fileID: 1862262794}
   - {fileID: 1896159499}
   - {fileID: 1926568262}
-  bouncyObjectPrefab: {fileID: 1159923962847151802, guid: aa47d888b1e0a468d8388a52be4f0a82, type: 3}
+  bouncyObjectPrefab: {fileID: 640781819421865618, guid: b8fcf8083c4c540ebb82a9a76ec9ddc7, type: 3}
   bouncySpawnPoints:
   - {fileID: 1135345935}
   ballPrefab: {fileID: 377869706}
@@ -11783,7 +11784,7 @@ Transform:
   m_GameObject: {fileID: 1135345931}
   serializedVersion: 2
   m_LocalRotation: {x: 0.20528184, y: 0, z: 0, w: 0.9787029}
-  m_LocalPosition: {x: -8.43601, y: -11.94, z: 51.21}
+  m_LocalPosition: {x: -8.368, y: -11.81, z: 51.27}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13337,7 +13338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ScoreObject
   scoreManager: {fileID: 753364224}
   energyManager: {fileID: 955633031}
-  points: 100
+  points: 1000
   hitSound: {fileID: 0}
   cooldown: 0.5
 --- !u!1 &1435245488 stripped
@@ -14519,6 +14520,77 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 7643231380588258496, guid: 42d2dd40ff91d41d19fa756f34e4a2c6, type: 3}
+--- !u!1 &1617147208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1617147211}
+  - component: {fileID: 1617147210}
+  - component: {fileID: 1617147209}
+  m_Layer: 0
+  m_Name: Post-process Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1617147209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617147208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b9a305e18de0c04dbd257a21cd47087, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Postprocessing.Runtime::UnityEngine.Rendering.PostProcessing.PostProcessVolume
+  sharedProfile: {fileID: 11400000, guid: 42a262af0aec74754b3b1624ec5137d0, type: 2}
+  isGlobal: 1
+  blendDistance: 0
+  weight: 1
+  priority: 0
+--- !u!65 &1617147210
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617147208}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!4 &1617147211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617147208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.90454, y: 5.5051975, z: -43.78204}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1621598740 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 283995447690003787, guid: 42d2dd40ff91d41d19fa756f34e4a2c6, type: 3}
@@ -15893,7 +15965,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -18526,7 +18598,7 @@ PrefabInstance:
     - target: {fileID: 4447215014752180355, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 2417ade188fa14a1fadaa201dc6d30e7, type: 2}
+      objectReference: {fileID: 2100000, guid: 9b8f0fca000014f569e690da5023a980, type: 2}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: maxSpeed
       value: 10000
@@ -18548,6 +18620,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 955633031}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
+      propertyPath: giantDuration
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: tornadoTarget
       value: 
       objectReference: {fileID: 1596253481}
@@ -18561,11 +18637,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: bounceMultiplier
-      value: 2
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: deathAnimationName
       value: GameOverAni
+      objectReference: {fileID: 0}
+    - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
+      propertyPath: giantScoreMultiplier
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: flipperSpeedMultiplier
@@ -18635,3 +18715,4 @@ SceneRoots:
   - {fileID: 1313543857}
   - {fileID: 1444313349}
   - {fileID: 1274965369}
+  - {fileID: 1617147211}
