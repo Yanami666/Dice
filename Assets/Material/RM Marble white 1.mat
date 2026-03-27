@@ -337,8 +337,8 @@ Material:
     - maxDist: 10
     - minDist: 1
     m_Colors:
-    - _BaseColor: {r: 0.9774717, g: 1, b: 0.25, a: 1}
-    - _Color: {r: 0.97747165, g: 1, b: 0.24999997, a: 1}
+    - _BaseColor: {r: 1, g: 0.963425, b: 0.051886797, a: 1}
+    - _Color: {r: 1, g: 0.963425, b: 0.051886775, a: 1}
     - _Color2: {r: 1, g: 1, b: 1, a: 1}
     - _CurvatureMultOffset: {r: 0, g: 0, b: 0, a: 0}
     - _CutoffEdgeGlow: {r: 0, g: 0, b: 0, a: 0.02}
