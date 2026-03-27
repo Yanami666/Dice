@@ -17928,7 +17928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: tornadoFlySpeed
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: bounceMultiplier
@@ -17944,7 +17944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4705898152807950784, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: tornadoPointsPerSecond
-      value: 50
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7568223099208672556, guid: c0a93f1d9ccad42449b7d0bb5ec77eda, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
